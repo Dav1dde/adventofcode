@@ -44,7 +44,10 @@ where
     };
 
     if opts.time {
-        eprintln!("[Execution time]: {:?}", Instant::now().duration_since(begin));
+        eprintln!(
+            "[Execution time]: {:?}",
+            Instant::now().duration_since(begin)
+        );
     }
 
     match result {
