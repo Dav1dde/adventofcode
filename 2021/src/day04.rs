@@ -45,7 +45,7 @@ impl Board {
             .map(|line| {
                 line.split_whitespace()
                     .map(|num| num.parse::<u8>().unwrap())
-                    .map(|num| Field::Unmarked(num))
+                    .map(Field::Unmarked)
                     .collect::<Vec<_>>()
             })
             .collect::<Vec<_>>();
@@ -78,7 +78,7 @@ impl Board {
         for row in self.0.iter() {
             for col in row.iter() {
                 if !col.is_marked() {
-                    score = score + col.get_value() as u32;
+                    score += col.get_value() as u32;
                 }
             }
         }
@@ -92,7 +92,7 @@ impl std::fmt::Debug for Board {
             for col in row {
                 write!(f, "{:?} ", col)?;
             }
-            write!(f, "\n")?;
+            writeln!(f)?;
         }
         Ok(())
     }
@@ -114,7 +114,7 @@ pub fn part1(reader: Input) -> anyhow::Result<u32> {
         }
     }
 
-    Ok(0)
+    anyhow::bail!("no solution found")
 }
 
 pub fn part2(reader: Input) -> anyhow::Result<u32> {
@@ -134,12 +134,13 @@ pub fn part2(reader: Input) -> anyhow::Result<u32> {
                 if is_last {
                     return Ok(board.score() * number as u32);
                 }
+                break;
             }
         }
         boards.retain(|b| b.is_some());
     }
 
-    Ok(0)
+    anyhow::bail!("no solution found")
 }
 
 pub fn main() {
