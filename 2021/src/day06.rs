@@ -75,19 +75,15 @@ pub fn part1(reader: Input) -> anyhow::Result<u64> {
 }
 
 pub fn part2(reader: Input) -> anyhow::Result<u64> {
-    let input: Vec<_> = reader
+    let mut cache = HashMap::new();
+    let result = reader
         .lines()
         .next()
         .unwrap()
         .unwrap()
         .split(',')
         .map(|x| x.parse::<u8>().unwrap())
-        .collect();
-
-    let mut cache = HashMap::new();
-    let result = input
-        .iter()
-        .map(move |x| calculate2(*x, 256, &mut cache))
+        .map(move |x| calculate2(x, 256, &mut cache))
         .sum();
 
     Ok(result)
