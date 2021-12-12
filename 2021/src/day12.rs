@@ -90,7 +90,7 @@ fn visit2<'a>(
     cave: &'a Cave,
     caves: &'a HashMap<String, Cave>,
     visited: &mut Vec<&'a str>,
-    double_visit: Option<&'a str>,
+    double_visit: Option<&'a str>, // could be a bool instead
 ) -> usize {
     let mut result = 0;
     for path in cave.connected_to() {
@@ -130,6 +130,9 @@ fn visit2<'a>(
 pub fn part1(reader: Input) -> anyhow::Result<usize> {
     let mut caves = parse_caves(reader);
     let start = caves.remove("start").unwrap();
+    // We can also use visit2 here:
+    //   Ok(visit2(&start, &caves, &mut Vec::new(), Some("")))
+    // The smart thing would also be to switch Option<&str> to a simple bool
     Ok(visit1(&start, &caves, &mut Vec::new()))
 }
 
