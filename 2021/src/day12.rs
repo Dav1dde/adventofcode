@@ -55,7 +55,7 @@ fn parse_caves(reader: Input) -> HashMap<String, Cave> {
 fn visit1<'a>(
     cave: &'a Cave,
     caves: &'a HashMap<String, Cave>,
-    visited: &mut HashSet<&'a str>,
+    visited: &mut Vec<&'a str>,
 ) -> usize {
     let mut result = 0;
     for path in cave.connected_to() {
@@ -67,18 +67,21 @@ fn visit1<'a>(
             continue;
         }
 
-        if visited.contains(path.as_str()) {
+        if visited.contains(&path.as_str()) {
             continue;
         }
 
         let connected_cave = caves.get(path).unwrap();
 
-        let mut visited = visited.clone();
         if connected_cave.is_small() {
-            visited.insert(path);
+            visited.push(path);
         }
 
-        result += visit1(connected_cave, caves, &mut visited);
+        result += visit1(connected_cave, caves, visited);
+
+        if connected_cave.is_small() {
+            visited.pop();
+        }
     }
     result
 }
@@ -86,7 +89,7 @@ fn visit1<'a>(
 fn visit2<'a>(
     cave: &'a Cave,
     caves: &'a HashMap<String, Cave>,
-    visited: &mut HashSet<&'a str>,
+    visited: &mut Vec<&'a str>,
     double_visit: Option<&'a str>,
 ) -> usize {
     let mut result = 0;
@@ -99,7 +102,7 @@ fn visit2<'a>(
             continue;
         }
 
-        let double_visit = if visited.contains(path.as_str()) {
+        let double_visit = if visited.contains(&path.as_str()) {
             if double_visit.is_some() {
                 continue;
             } else {
@@ -111,12 +114,15 @@ fn visit2<'a>(
 
         let connected_cave = caves.get(path).unwrap();
 
-        let mut visited = visited.clone();
         if connected_cave.is_small() {
-            visited.insert(path);
+            visited.push(path);
         }
 
-        result += visit2(connected_cave, caves, &mut visited, double_visit);
+        result += visit2(connected_cave, caves, visited, double_visit);
+
+        if connected_cave.is_small() {
+            visited.pop();
+        }
     }
     result
 }
@@ -124,13 +130,13 @@ fn visit2<'a>(
 pub fn part1(reader: Input) -> anyhow::Result<usize> {
     let mut caves = parse_caves(reader);
     let start = caves.remove("start").unwrap();
-    Ok(visit1(&start, &caves, &mut HashSet::new()))
+    Ok(visit1(&start, &caves, &mut Vec::new()))
 }
 
 pub fn part2(reader: Input) -> anyhow::Result<usize> {
     let mut caves = parse_caves(reader);
     let start = caves.remove("start").unwrap();
-    Ok(visit2(&start, &caves, &mut HashSet::new(), None))
+    Ok(visit2(&start, &caves, &mut Vec::new(), None))
 }
 
 pub fn main() {
