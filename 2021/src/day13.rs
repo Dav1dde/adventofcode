@@ -5,9 +5,9 @@ use std::io::BufRead;
 
 #[derive(Debug)]
 struct Paper {
-    dots: HashSet<(u32, u32)>,
-    max_x: u32,
-    max_y: u32,
+    dots: HashSet<(u64, u64)>,
+    max_x: u64,
+    max_y: u64,
 }
 
 impl Paper {
@@ -19,8 +19,8 @@ impl Paper {
         let mut max_y = 0;
         for line in lines.take_while(|x| !x.is_empty()) {
             let (x, y) = line.split_once(",").unwrap();
-            let x = x.parse::<u32>().unwrap();
-            let y = y.parse::<u32>().unwrap();
+            let x = x.parse::<u64>().unwrap();
+            let y = y.parse::<u64>().unwrap();
             dots.insert((x, y));
             max_x = max_x.max(x);
             max_y = max_y.max(y);
@@ -29,35 +29,45 @@ impl Paper {
         Self { dots, max_x, max_y }
     }
 
-    fn fold_y(&mut self, fold_y: u32) {
-        let max_y = self.max_y;
+    fn fold_y(&mut self, fold_y: u64) {
         self.dots = self
             .dots
             .iter()
-            .map(|&(x, y)| if y > fold_y { (x, max_y - y) } else { (x, y) })
+            .map(|&(x, y)| {
+                if y > fold_y {
+                    (x, 2 * fold_y - y)
+                } else {
+                    (x, y)
+                }
+            })
             .collect();
-        self.max_y = fold_y - 1;
+        self.max_y = fold_y;
     }
 
-    fn fold_x(&mut self, fold_x: u32) {
-        let max_x = self.max_x;
+    fn fold_x(&mut self, fold_x: u64) {
         self.dots = self
             .dots
             .iter()
-            .map(|&(x, y)| if x > fold_x { (max_x - x, y) } else { (x, y) })
+            .map(|&(x, y)| {
+                if x > fold_x {
+                    (2 * fold_x - x, y)
+                } else {
+                    (x, y)
+                }
+            })
             .collect();
-        self.max_x = fold_x - 1;
+        self.max_x = fold_x;
     }
 }
 
 impl Display for Paper {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for y in 0..=self.max_y {
-            for x in 0..=self.max_x {
+        for y in 0..self.max_y {
+            for x in 0..self.max_x {
                 if self.dots.contains(&(x, y)) {
                     write!(f, "#")?;
                 } else {
-                    write!(f, ".")?;
+                    write!(f, " ")?;
                 }
             }
             writeln!(f)?;
