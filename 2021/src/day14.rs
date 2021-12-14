@@ -3,19 +3,19 @@ use itertools::Itertools;
 use std::collections::HashMap;
 use std::io::BufRead;
 
-struct PolyTemplate([u8; 26 * 26]);
+struct PolyTemplate([[u8; 26]; 26]);
 
 impl PolyTemplate {
     fn new() -> Self {
-        Self([0; 26 * 26])
+        Self([[0; 26]; 26])
     }
 
     fn insert(&mut self, (a, b): (u8, u8), result: u8) {
-        self.0[(a - b'A') as usize + 26 * (b - b'A') as usize] = result;
+        self.0[(a - b'A') as usize][(b - b'A') as usize] = result;
     }
 
     fn lookup(&self, (a, b): (u8, u8)) -> u8 {
-        self.0[(a - b'A') as usize + 26 * (b - b'A') as usize]
+        self.0[(a - b'A') as usize][(b - b'A') as usize]
     }
 
     fn expand(&self, input: &[u8]) -> Vec<u8> {
@@ -106,6 +106,7 @@ pub fn part1(reader: Input) -> anyhow::Result<usize> {
     for _ in 0..10 {
         input = template.expand(&input);
     }
+
     let (min, max) = input
         .into_iter()
         .counts()
