@@ -72,12 +72,13 @@ fn expand_inner(
         *result = *cached;
         return;
     }
-    if iterations == 0 {
-        return;
-    }
     let expanded = template.lookup((a, b));
 
     result[(expanded - b'A') as usize] += 1;
+
+    if iterations == 1 {
+        return;
+    }
 
     let mut tmp1 = [0; 26];
     expand_inner(template, (a, expanded), iterations - 1, &mut tmp1, cache);
