@@ -51,11 +51,11 @@ fn find_shortest(grid: &Grid) -> Option<usize> {
     let destination = (grid.width() - 1, grid.height() - 1);
 
     let mut checked = grid::Grid::new(
-        vec![false; grid.width() * grid.height()],
+        vec![false; grid.size()],
         grid.width(),
         grid.height(),
     );
-    let mut candidates = BinaryHeap::new();
+    let mut candidates = BinaryHeap::with_capacity(grid.width() * grid.height() / 5);
 
     let est_cost = |(x, y): (usize, usize)| -> usize {
         abs_diff(x, destination.0) + abs_diff(y, destination.1)
@@ -103,7 +103,7 @@ pub fn part2(reader: Input) -> anyhow::Result<usize> {
     let height = grid.height();
 
     let mut data = Vec::new();
-    data.resize(grid.width() * 5 * grid.height() * 5, 0);
+    data.resize(grid.size() * 5 * 5, 0);
     let mut new_grid = Grid::new(data, grid.width() * 5, grid.height() * 5);
     for (x, y, &value) in grid.values() {
         for x_diff in 0..5 {
