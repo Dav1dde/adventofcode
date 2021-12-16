@@ -1,4 +1,4 @@
-use aoc2021::{Input, grid};
+use aoc2021::{grid, Input};
 
 type Grid = grid::Grid<u8>;
 

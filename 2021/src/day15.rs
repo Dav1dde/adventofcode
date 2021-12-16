@@ -50,11 +50,7 @@ impl Ord for Node {
 fn find_shortest(grid: &Grid) -> Option<usize> {
     let destination = (grid.width() - 1, grid.height() - 1);
 
-    let mut checked = grid::Grid::new(
-        vec![false; grid.size()],
-        grid.width(),
-        grid.height(),
-    );
+    let mut checked = grid::Grid::new(vec![false; grid.size()], grid.width(), grid.height());
     let mut candidates = BinaryHeap::with_capacity(grid.width() * grid.height() / 5);
 
     let est_cost = |(x, y): (usize, usize)| -> usize {

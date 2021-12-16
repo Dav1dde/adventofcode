@@ -9,6 +9,7 @@ clap = "3.0.0-beta.5"
 anyhow = "1"
 itertools = "0.10"
 either = "1"
+nom = "7"
 
 
 [[bin]]
@@ -59,6 +60,9 @@ path = "src/day14.rs"
 [[bin]]
 name = "day15"
 path = "src/day15.rs"
+[[bin]]
+name = "day16"
+path = "src/day16.rs"
 
 
 [profile.release]
