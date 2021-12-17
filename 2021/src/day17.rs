@@ -47,8 +47,8 @@ fn shoot(area: Area) -> (i64, i64, (i64, i64)) {
     let mut result = (0, 0);
     let mut total = 0;
 
-    for x_vel_start in 0..(area.1.x * 2) {
-        for y_vel_start in -1000..1000 {
+    for x_vel_start in 0..=area.1.x {
+        for y_vel_start in area.0.y..-area.0.y {
             let mut position = Point::new(0, 0);
             let mut x_vel = x_vel_start;
             let mut y_vel = y_vel_start;
