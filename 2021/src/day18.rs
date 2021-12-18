@@ -84,9 +84,8 @@ fn reduce(number: Number) -> Number {
             }
         }
 
-        match split(number) {
-            (true, num) => number = num,
-            (false, num) => break *num,
+        if !split(&mut number) {
+            break *number;
         }
     }
 }
@@ -145,28 +144,19 @@ fn explode(number: Box<Number>, depth: usize) -> Fuse {
     }
 }
 
-fn split(number: Box<Number>) -> (bool, Box<Number>) {
-    let (lhs, rhs) = match *number {
-        Number::Literal(value) if value > 9 => {
-            let lv = value / 2;
-            return (
-                true,
-                Box::new(Number::pair(
-                    Number::Literal(lv),
-                    Number::Literal(value - lv),
-                )),
+fn split(number: &mut Number) -> bool {
+    match number {
+        Number::Literal(value) if *value > 9 => {
+            let lv = *value / 2;
+            *number = Number::pair(
+                Number::Literal(lv),
+                Number::Literal(*value - lv),
             );
+            true
         }
-        Number::Literal(_) => return (false, number),
-        Number::Pair(lhs, rhs) => (lhs, rhs),
-    };
-
-    let nlhs = match split(lhs) {
-        (true, nlhs) => return (true, Box::new(Number::Pair(nlhs, rhs))),
-        (false, nlhs) => nlhs,
-    };
-    let (stop, nrhs) = split(rhs);
-    (stop, Box::new(Number::Pair(nlhs, nrhs)))
+        Number::Literal(_) => false,
+        Number::Pair(lhs, rhs) => split(lhs) || split(rhs),
+    }
 }
 
 fn parse(input: &mut impl Iterator<Item = u8>) -> Number {
