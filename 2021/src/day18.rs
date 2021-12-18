@@ -2,6 +2,19 @@ use aoc2021::Input;
 use itertools::Itertools;
 use std::io::BufRead;
 
+macro_rules! add_left {
+    ($num:ident, $value:expr) => {{
+        $num.add_left($value);
+        $num
+    }};
+}
+macro_rules! add_right {
+    ($num:ident, $value:expr) => {{
+        $num.add_right($value);
+        $num
+    }};
+}
+
 #[derive(Debug, Clone)]
 enum Number {
     Pair(Box<Number>, Box<Number>),
@@ -13,17 +26,17 @@ impl Number {
         Self::Pair(Box::new(n1), Box::new(n2))
     }
 
-    fn add_left(self, value: u8) -> Self {
+    fn add_left(&mut self, value: u8) {
         match self {
-            Self::Literal(v) => Self::Literal(v + value),
-            Self::Pair(lhs, rhs) => Self::Pair(Box::new(lhs.add_left(value)), rhs),
+            Self::Literal(v) => *v += value,
+            Self::Pair(lhs, _) => lhs.add_left(value),
         }
     }
 
-    fn add_right(self, value: u8) -> Self {
+    fn add_right(&mut self, value: u8) {
         match self {
-            Self::Literal(v) => Self::Literal(v + value),
-            Self::Pair(lhs, rhs) => Self::Pair(lhs, Box::new(rhs.add_right(value))),
+            Self::Literal(v) => *v += value,
+            Self::Pair(_, rhs) => rhs.add_right(value),
         }
     }
 
@@ -59,7 +72,8 @@ impl std::ops::Add for Number {
     }
 }
 
-fn reduce(mut number: Number) -> Number {
+fn reduce(number: Number) -> Number {
+    let mut number = Box::new(number);
     loop {
         loop {
             let ex = explode(number, 0);
@@ -72,22 +86,22 @@ fn reduce(mut number: Number) -> Number {
 
         match split(number) {
             (true, num) => number = num,
-            (false, num) => break num,
+            (false, num) => break *num,
         }
     }
 }
 
 #[derive(Debug)]
 enum Fuse {
-    Cold(Number),
-    AddLeft(Number, u8),
-    AddRight(Number, u8),
-    AddLeftRight(Number, u8, u8),
-    Done(Number),
+    Cold(Box<Number>),
+    AddLeft(Box<Number>, u8),
+    AddRight(Box<Number>, u8),
+    AddLeftRight(Box<Number>, u8, u8),
+    Done(Box<Number>),
 }
 
 impl Fuse {
-    fn unwrap(self) -> Number {
+    fn unwrap(self) -> Box<Number> {
         match self {
             Self::Cold(number) => number,
             Self::AddLeft(number, ..) => number,
@@ -98,54 +112,61 @@ impl Fuse {
     }
 }
 
-fn explode(number: Number, depth: usize) -> Fuse {
-    let (lhs, rhs) = match number {
+fn explode(number: Box<Number>, depth: usize) -> Fuse {
+    let (lhs, mut rhs) = match *number {
         Number::Literal(_) => return Fuse::Cold(number),
         Number::Pair(lhs, rhs) => (lhs, rhs),
     };
 
     if depth == 4 {
-        return Fuse::AddLeftRight(Number::Literal(0), lhs.unwrap(), rhs.unwrap());
+        return Fuse::AddLeftRight(Box::new(Number::Literal(0)), lhs.unwrap(), rhs.unwrap());
     }
 
-    match explode(*lhs, depth + 1) {
-        Fuse::AddLeft(number, lv) => Fuse::AddLeft(Number::Pair(Box::new(number), rhs), lv),
-        Fuse::AddRight(number, rv) => Fuse::Done(Number::pair(number, rhs.add_left(rv))),
-        Fuse::AddLeftRight(number, lv, rv) => {
-            Fuse::AddLeft(Number::pair(number, rhs.add_left(rv)), lv)
+    match explode(lhs, depth + 1) {
+        Fuse::AddLeft(number, lv) => Fuse::AddLeft(Box::new(Number::Pair(number, rhs)), lv),
+        Fuse::AddRight(number, rv) => {
+            Fuse::Done(Box::new(Number::Pair(number, add_left!(rhs, rv))))
         }
-        Fuse::Done(number) => Fuse::Done(Number::Pair(Box::new(number), rhs)),
-        Fuse::Cold(nhls) => match explode(*rhs, depth + 1) {
-            Fuse::AddLeft(number, rv) => Fuse::Done(Number::pair(nhls.add_right(rv), number)),
-            Fuse::AddRight(number, rv) => Fuse::AddRight(Number::pair(nhls, number), rv),
-            Fuse::AddLeftRight(number, lv, rv) => {
-                Fuse::AddRight(Number::pair(nhls.add_right(lv), number), rv)
+        Fuse::AddLeftRight(number, lv, rv) => {
+            Fuse::AddLeft(Box::new(Number::Pair(number, add_left!(rhs, rv))), lv)
+        }
+        Fuse::Done(number) => Fuse::Done(Box::new(Number::Pair(number, rhs))),
+        Fuse::Cold(mut nhls) => match explode(rhs, depth + 1) {
+            Fuse::AddLeft(number, rv) => {
+                Fuse::Done(Box::new(Number::Pair(add_right!(nhls, rv), number)))
             }
-            Fuse::Done(number) => Fuse::Done(Number::pair(nhls, number)),
-            Fuse::Cold(nrhs) => Fuse::Cold(Number::pair(nhls, nrhs)),
+            Fuse::AddRight(number, rv) => Fuse::AddRight(Box::new(Number::Pair(nhls, number)), rv),
+            Fuse::AddLeftRight(number, lv, rv) => {
+                Fuse::AddRight(Box::new(Number::Pair(add_right!(nhls, lv), number)), rv)
+            }
+            Fuse::Done(number) => Fuse::Done(Box::new(Number::Pair(nhls, number))),
+            Fuse::Cold(nrhs) => Fuse::Cold(Box::new(Number::Pair(nhls, nrhs))),
         },
     }
 }
 
-fn split(number: Number) -> (bool, Number) {
-    let (lhs, rhs) = match number {
+fn split(number: Box<Number>) -> (bool, Box<Number>) {
+    let (lhs, rhs) = match *number {
         Number::Literal(value) if value > 9 => {
             let lv = value / 2;
             return (
                 true,
-                Number::pair(Number::Literal(lv), Number::Literal(value - lv)),
+                Box::new(Number::pair(
+                    Number::Literal(lv),
+                    Number::Literal(value - lv),
+                )),
             );
         }
         Number::Literal(_) => return (false, number),
         Number::Pair(lhs, rhs) => (lhs, rhs),
     };
 
-    let nlhs = match split(*lhs) {
-        (true, nlhs) => return (true, Number::pair(nlhs, *rhs)),
+    let nlhs = match split(lhs) {
+        (true, nlhs) => return (true, Box::new(Number::Pair(nlhs, rhs))),
         (false, nlhs) => nlhs,
     };
-    let (stop, nrhs) = split(*rhs);
-    (stop, Number::pair(nlhs, nrhs))
+    let (stop, nrhs) = split(rhs);
+    (stop, Box::new(Number::Pair(nlhs, nrhs)))
 }
 
 fn parse(input: &mut impl Iterator<Item = u8>) -> Number {
