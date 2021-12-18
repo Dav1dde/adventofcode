@@ -1,4 +1,6 @@
 target
 *.swp
 day*.txt
-input.txt
+input*.txt
+flamegraph.svg
+perf.data*
