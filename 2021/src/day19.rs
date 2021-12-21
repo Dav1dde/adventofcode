@@ -2,7 +2,7 @@
 use aoc2021::Input;
 use itertools::Itertools;
 use std::{
-    collections::{HashMap, HashSet},
+    collections::{hash_map::Entry, HashMap, HashSet},
     io::BufRead,
 };
 
@@ -353,19 +353,18 @@ pub fn part1(reader: Input) -> anyhow::Result<u32> {
                                 matches.insert(*aa, bb);
                                 matches.insert(*ab, ba);
                             }
+                        } else if ba < bb {
+                            //println!("c {} {}", aa, bb);
+                            //println!("c {} {}", ab, ba);
+                            matches.insert(*aa, bb);
+                            matches.insert(*ab, ba);
                         } else {
-                            if ba < bb {
-                                //println!("c {} {}", aa, bb);
-                                //println!("c {} {}", ab, ba);
-                                matches.insert(*aa, bb);
-                                matches.insert(*ab, ba);
-                            } else {
-                                //println!("d {} {} {}", aa, ba, *aa - ba);
-                                //println!("d {} {} {}", ab, bb, *ab - bb);
-                                matches.insert(*aa, ba);
-                                matches.insert(*ab, bb);
-                            }
+                            //println!("d {} {} {}", aa, ba, *aa - ba);
+                            //println!("d {} {} {}", ab, bb, *ab - bb);
+                            matches.insert(*aa, ba);
+                            matches.insert(*ab, bb);
                         }
+
                         // dbg!(diff);
                         //println!("{}", diff);
 
@@ -499,12 +498,12 @@ pub fn part1(reader: Input) -> anyhow::Result<u32> {
     let mut coords = HashMap::new();
     for path in transitions.iter() {
         for step in path {
-            if !coords.contains_key(&step.0) {
+            if let Entry::Vacant(e) = coords.entry(step.0) {
                 let mut f = vec![Vec3::new(0, 0, 0)];
                 // dbg!(&start.name, step.0, &f);
                 transform2(&mut f, step.0, &start.name, &transitions);
                 // dbg!(&f);
-                coords.insert(step.0, f[0]);
+                e.insert(f[0]);
             }
         }
     }
@@ -525,7 +524,7 @@ fn transform2(
     points: &mut Vec<Vec3>,
     from: &str,
     to: &str,
-    transitions: &Vec<Vec<(&str, Operation)>>,
+    transitions: &[Vec<(&str, Operation)>],
 ) {
     let transition = transitions
         .iter()
@@ -585,22 +584,18 @@ fn build_transitions<'a>(
     while let Some((next, previous)) = next_values.pop() {
         let mut more = false;
         for (&(from, to), &(direction, origin)) in origins.iter() {
-            if from == next {
-                if seen.insert(to) {
-                    more = true;
-                    let mut previous = previous.clone();
-                    previous.push((to, Operation::Normal(direction, origin)));
-                    next_values.push((to, previous));
-                }
+            if from == next && seen.insert(to) {
+                more = true;
+                let mut previous = previous.clone();
+                previous.push((to, Operation::Normal(direction, origin)));
+                next_values.push((to, previous));
             }
-            if to == next {
-                if seen.insert(from) {
-                    more = true;
-                    // TODO reverse direction here?
-                    let mut previous = previous.clone();
-                    previous.push((from, Operation::Reverse(direction, origin)));
-                    next_values.push((from, previous));
-                }
+            if to == next && seen.insert(from) {
+                more = true;
+                // TODO reverse direction here?
+                let mut previous = previous.clone();
+                previous.push((from, Operation::Reverse(direction, origin)));
+                next_values.push((from, previous));
             }
         }
 

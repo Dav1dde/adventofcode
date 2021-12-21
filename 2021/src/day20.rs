@@ -70,7 +70,7 @@ fn enhance(mut image: Grid<Pixel>, table: &[Pixel], iterations: usize) -> usize 
         if table[0] != Pixel::Dark {
             def = match def {
                 // all light pixels -> is 0b111_111_111 -> swap to the pixel at that index
-                Pixel::Light => table[0b111_111_111],
+                Pixel::Light => table[0b111111111],
                 // all dark pixels -> is 0b000_000_000 -> swap to the pixel at that index
                 Pixel::Dark => table[0],
             }
