@@ -66,60 +66,59 @@ impl Direction {
             // Self::D21 => Vec3::new(-v.z, v.x, v.y),
             // Self::D22 => Vec3::new(v.z, -v.x, v.y),
             // Self::D23 => Vec3::new(v.z, v.x, -v.y),
-        Self::D00 => Vec3::new(v.x, v.y, v.z),     //[x, y, z]
-        Self::D01 => Vec3::new(v.x, v.z, -v.y),    //[x, z, -y],
-        Self::D02 => Vec3::new(v.x, -v.y, -v.z),   //[x, -y, -z],
-        Self::D03 => Vec3::new(v.x, -v.z, v.y),    //[x, -z, y],
-        Self::D04 => Vec3::new(v.y, v.x, -v.z),    //[y, x, -z],
-        Self::D05 => Vec3::new(v.y, v.z, v.x),     //[y, z, x],
-        Self::D06 => Vec3::new(v.y, -v.x, v.z),    //[y, -x, z],
-        Self::D07 => Vec3::new(v.y, -v.z, -v.x),   //[y, -z, -x],
-        Self::D08 => Vec3::new(v.z, v.x, v.y),     //[z, x, y],
-        Self::D09 => Vec3::new(v.z, v.y, -v.x),    //[z, y, -x],
-        Self::D10 => Vec3::new(v.z, -v.x, -v.y),  //[z, -x, -y],
-        Self::D11 => Vec3::new(v.z, -v.y, v.x),   //[z, -y, x],
-        Self::D12 => Vec3::new(-v.x, v.y, -v.z),  //[-x, y, -z],
-        Self::D13 => Vec3::new(-v.x, v.z, v.y),   //[-x, z, y],
-        Self::D14 => Vec3::new(-v.x, -v.y, v.z),  //[-x, -y, z],
-        Self::D15 => Vec3::new(-v.x, -v.z, -v.y), //[-x, -z, -y],
-        Self::D16 => Vec3::new(-v.y, v.x, v.z),   //[-y, x, z],
-        Self::D17 => Vec3::new(-v.y, v.z, -v.x),  //[-y, z, -x],
-        Self::D18 => Vec3::new(-v.y, -v.x, -v.z), //[-y, -x, -z],
-        Self::D19 => Vec3::new(-v.y, -v.z, v.x),  //[-y, -z, x],
-        Self::D20 => Vec3::new(-v.z, v.x, -v.y),  //[-z, x, -y],
-        Self::D21 => Vec3::new(-v.z, v.y, v.x),   //[-z, y, x],
-        Self::D22 => Vec3::new(-v.z, -v.x, v.y),  //[-z, -x, y],
-        Self::D23 => Vec3::new(-v.z, -v.y, -v.x), //[-z, -y, -x],
-
+            Self::D00 => Vec3::new(v.x, v.y, v.z),  //[x, y, z]
+            Self::D01 => Vec3::new(v.x, v.z, -v.y), //[x, z, -y],
+            Self::D02 => Vec3::new(v.x, -v.y, -v.z), //[x, -y, -z],
+            Self::D03 => Vec3::new(v.x, -v.z, v.y), //[x, -z, y],
+            Self::D04 => Vec3::new(v.y, v.x, -v.z), //[y, x, -z],
+            Self::D05 => Vec3::new(v.y, v.z, v.x),  //[y, z, x],
+            Self::D06 => Vec3::new(v.y, -v.x, v.z), //[y, -x, z],
+            Self::D07 => Vec3::new(v.y, -v.z, -v.x), //[y, -z, -x],
+            Self::D08 => Vec3::new(v.z, v.x, v.y),  //[z, x, y],
+            Self::D09 => Vec3::new(v.z, v.y, -v.x), //[z, y, -x],
+            Self::D10 => Vec3::new(v.z, -v.x, -v.y), //[z, -x, -y],
+            Self::D11 => Vec3::new(v.z, -v.y, v.x), //[z, -y, x],
+            Self::D12 => Vec3::new(-v.x, v.y, -v.z), //[-x, y, -z],
+            Self::D13 => Vec3::new(-v.x, v.z, v.y), //[-x, z, y],
+            Self::D14 => Vec3::new(-v.x, -v.y, v.z), //[-x, -y, z],
+            Self::D15 => Vec3::new(-v.x, -v.z, -v.y), //[-x, -z, -y],
+            Self::D16 => Vec3::new(-v.y, v.x, v.z), //[-y, x, z],
+            Self::D17 => Vec3::new(-v.y, v.z, -v.x), //[-y, z, -x],
+            Self::D18 => Vec3::new(-v.y, -v.x, -v.z), //[-y, -x, -z],
+            Self::D19 => Vec3::new(-v.y, -v.z, v.x), //[-y, -z, x],
+            Self::D20 => Vec3::new(-v.z, v.x, -v.y), //[-z, x, -y],
+            Self::D21 => Vec3::new(-v.z, v.y, v.x), //[-z, y, x],
+            Self::D22 => Vec3::new(-v.z, -v.x, v.y), //[-z, -x, y],
+            Self::D23 => Vec3::new(-v.z, -v.y, -v.x), //[-z, -y, -x],
         }
     }
 
     fn reverse(&self) -> Self {
         match self {
-        Self::D00 => Self::D00,     //[x, y, z]
-        Self::D01 => Self::D03, // Vec3::new(v.x, v.z, -v.y),    //[x, z, -y],
-        Self::D02 => Self::D02, // Vec3::new(v.x, -v.y, -v.z),   //[x, -y, -z],
-        Self::D03 => Self::D01, // Vec3::new(v.x, -v.z, v.y),    //[x, -z, y],
-        Self::D04 => Self::D04, // Vec3::new(v.y, v.x, -v.z),    //[y, x, -z],
-        Self::D05 => Self::D08, // Vec3::new(v.y, v.z, v.x),     //[y, z, x],
-        Self::D06 => Self::D16, // Vec3::new(v.y, -v.x, v.z),    //[y, -x, z],
-        Self::D07 => Self::D20, // Vec3::new(v.y, -v.z, -v.x),   //[y, -z, -x],
-        Self::D08 => Self::D05, // Vec3::new(v.z, v.x, v.y),     //[z, x, y],
-        Self::D09 => Self::D21, // Vec3::new(v.z, v.y, -v.x),    //[z, y, -x],
-        Self::D10 => Self::D19, // Vec3::new(v.z, -v.x, -v.y),  //[z, -x, -y],
-        Self::D11 => Self::D11, // Vec3::new(v.z, -v.y, v.x),   //[z, -y, x],
-        Self::D12 => Self::D12, // Vec3::new(-v.x, v.y, -v.z),  //[-x, y, -z],
-        Self::D13 => Self::D13, // Vec3::new(-v.x, v.z, v.y),   //[-x, z, y],
-        Self::D14 => Self::D14, // Vec3::new(-v.x, -v.y, v.z),  //[-x, -y, z],
-        Self::D15 => Self::D15, // Vec3::new(-v.x, -v.z, -v.y), //[-x, -z, -y],
-        Self::D16 => Self::D06, // Vec3::new(-v.y, v.x, v.z),   //[-y, x, z],
-        Self::D17 => Self::D22, // Vec3::new(-v.y, v.z, -v.x),  //[-y, z, -x],
-        Self::D18 => Self::D18, // Vec3::new(-v.y, -v.x, -v.z), //[-y, -x, -z],
-        Self::D19 => Self::D10, // Vec3::new(-v.y, -v.z, v.x),  //[-y, -z, x],
-        Self::D20 => Self::D07, // Vec3::new(-v.z, v.x, -v.y),  //[-z, x, -y],
-        Self::D21 => Self::D09, // Vec3::new(-v.z, v.y, v.x),   //[-z, y, x],
-        Self::D22 => Self::D17, // Vec3::new(-v.z, -v.x, v.y),  //[-z, -x, y],
-        Self::D23 => Self::D23, // Vec3::new(-v.z, -v.y, -v.x), //[-z, -y, -x],
+            Self::D00 => Self::D00, //[x, y, z]
+            Self::D01 => Self::D03, // Vec3::new(v.x, v.z, -v.y),    //[x, z, -y],
+            Self::D02 => Self::D02, // Vec3::new(v.x, -v.y, -v.z),   //[x, -y, -z],
+            Self::D03 => Self::D01, // Vec3::new(v.x, -v.z, v.y),    //[x, -z, y],
+            Self::D04 => Self::D04, // Vec3::new(v.y, v.x, -v.z),    //[y, x, -z],
+            Self::D05 => Self::D08, // Vec3::new(v.y, v.z, v.x),     //[y, z, x],
+            Self::D06 => Self::D16, // Vec3::new(v.y, -v.x, v.z),    //[y, -x, z],
+            Self::D07 => Self::D20, // Vec3::new(v.y, -v.z, -v.x),   //[y, -z, -x],
+            Self::D08 => Self::D05, // Vec3::new(v.z, v.x, v.y),     //[z, x, y],
+            Self::D09 => Self::D21, // Vec3::new(v.z, v.y, -v.x),    //[z, y, -x],
+            Self::D10 => Self::D19, // Vec3::new(v.z, -v.x, -v.y),  //[z, -x, -y],
+            Self::D11 => Self::D11, // Vec3::new(v.z, -v.y, v.x),   //[z, -y, x],
+            Self::D12 => Self::D12, // Vec3::new(-v.x, v.y, -v.z),  //[-x, y, -z],
+            Self::D13 => Self::D13, // Vec3::new(-v.x, v.z, v.y),   //[-x, z, y],
+            Self::D14 => Self::D14, // Vec3::new(-v.x, -v.y, v.z),  //[-x, -y, z],
+            Self::D15 => Self::D15, // Vec3::new(-v.x, -v.z, -v.y), //[-x, -z, -y],
+            Self::D16 => Self::D06, // Vec3::new(-v.y, v.x, v.z),   //[-y, x, z],
+            Self::D17 => Self::D22, // Vec3::new(-v.y, v.z, -v.x),  //[-y, z, -x],
+            Self::D18 => Self::D18, // Vec3::new(-v.y, -v.x, -v.z), //[-y, -x, -z],
+            Self::D19 => Self::D10, // Vec3::new(-v.y, -v.z, v.x),  //[-y, -z, x],
+            Self::D20 => Self::D07, // Vec3::new(-v.z, v.x, -v.y),  //[-z, x, -y],
+            Self::D21 => Self::D09, // Vec3::new(-v.z, v.y, v.x),   //[-z, y, x],
+            Self::D22 => Self::D17, // Vec3::new(-v.z, -v.x, v.y),  //[-z, -x, y],
+            Self::D23 => Self::D23, // Vec3::new(-v.z, -v.y, -v.x), //[-z, -y, -x],
         }
     }
 
@@ -171,7 +170,11 @@ impl Vec3 {
     }
 
     fn sq(&self) -> Vec3 {
-        Vec3 { x: self.x.pow(2), y: self.y.pow(2), z: self.z.pow(2) }
+        Vec3 {
+            x: self.x.pow(2),
+            y: self.y.pow(2),
+            z: self.z.pow(2),
+        }
     }
 
     fn manhattan(&self) -> u32 {
@@ -277,7 +280,7 @@ pub fn part1(reader: Input) -> anyhow::Result<u32> {
         .map_while(|_| Scanner::read(&mut lines))
         // .take(2)
         .collect::<Vec<_>>();
-    
+
     // scanners.reverse();
 
     // let (a, b) = (&r[0], &r[1]);
@@ -303,7 +306,7 @@ pub fn part1(reader: Input) -> anyhow::Result<u32> {
     //     assert_eq!(dir.reverse().apply(s2 - diff), s4);
     // }
 
-    //  (1125, -168, 72) 
+    //  (1125, -168, 72)
     for ((a_name, a), (b_name, b)) in x.into_iter().tuple_combinations() {
         // let duplicates = a.iter().filter(|v| b.contains(v)).count();
         // println!("{} <-> {}: {}", a_name, b_name, duplicates);
@@ -392,7 +395,7 @@ pub fn part1(reader: Input) -> anyhow::Result<u32> {
             // dbg!(matches.len(), &matches);
             // if i >= 66 {
             if matches.len() >= 10 {
-            //println!("{} <-> {}", a_name, b_name);
+                //println!("{} <-> {}", a_name, b_name);
                 dir = Some(direction);
                 break;
             } else {
@@ -474,18 +477,17 @@ pub fn part1(reader: Input) -> anyhow::Result<u32> {
     //);
 
     let mut system = HashSet::new();
-    start.measurements.iter().for_each(|m| { system.insert(*m); });
+    start.measurements.iter().for_each(|m| {
+        system.insert(*m);
+    });
 
     for scanner in scanners.into_iter() {
         let mut f = scanner.measurements;
-        transform2(
-            &mut f,
-            &scanner.name,
-            start.name.as_ref(),
-            &transitions
-        );
+        transform2(&mut f, &scanner.name, start.name.as_ref(), &transitions);
 
-        f.iter().for_each(|m| { system.insert(*m); });
+        f.iter().for_each(|m| {
+            system.insert(*m);
+        });
     }
 
     // for p in system.iter() {
@@ -508,10 +510,13 @@ pub fn part1(reader: Input) -> anyhow::Result<u32> {
     }
     // dbg!(&coords);
 
-
-    let s = coords.values().tuple_combinations().map(|(&a, &b)| (a - b).manhattan()).max().unwrap();
+    let s = coords
+        .values()
+        .tuple_combinations()
+        .map(|(&a, &b)| (a - b).manhattan())
+        .max()
+        .unwrap();
     dbg!(s);
-    
 
     Ok(0)
 }
@@ -556,14 +561,9 @@ impl Operation {
     }
     fn apply(&self, target: Vec3) -> Vec3 {
         match self {
-            Self::Normal(direction, diff) => {
-                direction.apply(target) + *diff
-            },
-            Self::Reverse(direction, diff) => {
-                direction.reverse().apply(target - *diff)
-            }
+            Self::Normal(direction, diff) => direction.apply(target) + *diff,
+            Self::Reverse(direction, diff) => direction.reverse().apply(target - *diff),
         }
-
     }
 }
 
