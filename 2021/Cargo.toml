@@ -83,6 +83,9 @@ path = "src/day21.rs"
 [[bin]]
 name = "day22"
 path = "src/day22.rs"
+[[bin]]
+name = "day23"
+path = "src/day23.rs"
 
 
 [profile.release]
