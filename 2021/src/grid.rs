@@ -78,6 +78,12 @@ impl<T> Grid<T> {
         &self.data
     }
 
+    pub fn swap(&mut self, pos1: (usize, usize), pos2: (usize, usize)) {
+        let index1 = pos1.0 + pos1.1 * self.width;
+        let index2 = pos2.0 + pos2.1 * self.width;
+        self.data.swap(index1, index2);
+    }
+
     pub fn width(&self) -> usize {
         self.width
     }
