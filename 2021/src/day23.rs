@@ -1,6 +1,6 @@
 use aoc2021::Input;
 use std::{
-    collections::{BinaryHeap, HashSet},
+    collections::BinaryHeap,
     fmt::Display,
     io::BufRead,
 };
@@ -327,7 +327,7 @@ fn solve<const ROOM_SIZE: usize>(cave: Cave<ROOM_SIZE>) -> Cost {
     let mut candidates = BinaryHeap::with_capacity(128);
     candidates.push(Element::new(0, cave));
 
-    let mut seen = HashSet::new();
+    let mut seen = fxhash::FxHashSet::default();
 
     while let Some(element) = candidates.pop() {
         if element.item.is_done() {

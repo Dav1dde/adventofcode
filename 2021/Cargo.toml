@@ -12,6 +12,7 @@ either = "1"
 nom = "7"
 serde_scan = "0.4"
 serde = { version = "1", features = ["derive"] }
+fxhash = "0.2"
 
 
 [[bin]]
