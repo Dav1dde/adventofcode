@@ -39,7 +39,7 @@ pub fn part1(reader: Input) -> anyhow::Result<u32> {
             max = max.max(current);
             current = 0;
         } else {
-            current = current + line.parse::<u32>().unwrap();
+            current += line.parse::<u32>().unwrap();
         }
     }
 
@@ -57,7 +57,7 @@ pub fn part2(reader: Input) -> anyhow::Result<u32> {
             max.push(current);
             current = 0;
         } else {
-            current = current + line.parse::<u32>().unwrap();
+            current += line.parse::<u32>().unwrap();
         }
     }
 

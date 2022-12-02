@@ -13,6 +13,9 @@ serde = { version = "1", features = ["derive"] }
 [[bin]]
 name = "day01"
 path = "src/day01.rs"
+[[bin]]
+name = "day02"
+path = "src/day02.rs"
 
 
 [profile.release]
