@@ -8,6 +8,7 @@ edition = "2021"
 clap = { version = "4", features = ["derive"] }
 anyhow = "1"
 serde = { version = "1", features = ["derive"] }
+itertools = "0.10"
 
 
 [[bin]]
@@ -16,6 +17,9 @@ path = "src/day01.rs"
 [[bin]]
 name = "day02"
 path = "src/day02.rs"
+[[bin]]
+name = "day03"
+path = "src/day03.rs"
 
 
 [profile.release]
