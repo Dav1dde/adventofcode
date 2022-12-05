@@ -28,8 +28,7 @@ where
     let opts = Opts::parse();
 
     let input: Input = if let Some(input) = opts.input {
-        let file =
-            File::open(&input).with_context(|| format!("Failed to read file {:?}", input))?;
+        let file = File::open(&input).with_context(|| format!("Failed to read file {input:?}"))?;
         Box::new(BufReader::new(file))
     } else {
         Box::new(BufReader::new(std::io::stdin()))
@@ -52,13 +51,13 @@ where
 
     match result {
         Ok(result) => {
-            println!("{}", result);
+            println!("{result}");
             Ok(result)
         }
         Err(err) => {
             eprintln!("Execution failed!");
             eprintln!("===============================");
-            eprintln!("{:?}", err);
+            eprintln!("{err:?}");
             eprintln!("===============================");
             Err(err)
         }
