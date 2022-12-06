@@ -27,11 +27,11 @@ where
 {
     let opts = Opts::parse();
 
-    let input: Input = if let Some(input) = opts.input {
+    let input = if let Some(input) = opts.input {
         let file = File::open(&input).with_context(|| format!("Failed to read file {input:?}"))?;
-        Box::new(BufReader::new(file))
+        BufReader::new(Box::new(file) as Box<dyn std::io::Read>)
     } else {
-        Box::new(BufReader::new(std::io::stdin()))
+        BufReader::new(Box::new(std::io::stdin()) as Box<dyn std::io::Read>)
     };
 
     let begin = Instant::now();

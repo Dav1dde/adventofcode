@@ -1,3 +1,3 @@
 pub mod cli;
 
-pub type Input = Box<dyn std::io::BufRead>;
+pub type Input = std::io::BufReader<Box<dyn std::io::Read>>;
